@@ -5,3 +5,15 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "basedpyright",
+    "pre-commit",
+    "ruff",
+]
+
+[tool.basedpyright]
+typeCheckingMode = "recommended"
+reportUnusedCallResult = false
+reportAny = false
