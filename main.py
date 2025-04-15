@@ -35,28 +35,12 @@ def decode_unicode_to_ascii(text: str) -> str:
 
 def main():
     parser = argparse.ArgumentParser()
-    subparsers = parser.add_subparsers(dest="command", help="Commands", required=True)
-
-    def add_common_args(parser: argparse.ArgumentParser):
-        parser.add_argument(
-            "text", nargs="*", help="Text to process (if not provided, reads from stdin)"
-        )
-        parser.add_argument(
-            "-f", "--file", help="Input file to read from instead of command line"
-        )
-        parser.add_argument(
-            "-o", "--output", help="Output file to write to instead of stdout"
-        )
-
-    encode_parser = subparsers.add_parser("encode", help="Encode ASCII to invisible Unicode")
-    add_common_args(encode_parser)
-
-    decode_parser = subparsers.add_parser("decode", help="Decode invisible Unicode back to ASCII")
-    add_common_args(decode_parser)
-
+    parser.add_argument("mode", choices=["encode", "decode"], help="Mode: encode or decode")
+    parser.add_argument("text", nargs="*", help="Text to process (if not provided, reads from stdin)")
+    parser.add_argument("-f", "--file", help="Input file to read from instead of command line")
+    parser.add_argument("-o", "--output", help="Output file to write to instead of stdout")
     args = parser.parse_args()
 
-    input_text = ""
     if args.file:
         try:
             with open(args.file, "r", encoding="utf-8") as f:
@@ -72,13 +56,10 @@ def main():
         parser.print_help()
         sys.exit(1)
 
-    if args.command == "encode":
+    if args.mode == "encode":
         output_text = encode_ascii_to_unicode(input_text)
-    elif args.command == "decode":
-        output_text = decode_unicode_to_ascii(input_text)
     else:
-        parser.print_help()
-        sys.exit(1)
+        output_text = decode_unicode_to_ascii(input_text)
 
     if args.output:
         try:
